@@ -78,10 +78,8 @@ public class Ai_Manager : MonoBehaviour
     private Anthropic anthropic;
 
     void Start() {
-        Debug.Assert(responseBox && inputBox, "Ai Manager REQUIRES an input field and response textbox!");
-        Debug.Assert(visionCamera, "No whiteboard detected. No whiteboard shots can be made.");
-
-
+        Debug.Assert(responseBox && inputBox, "Ai Manager REQUIRES an input field and response textbox! InputBox is a TMPInputField and responseBox is TMP_Text.");
+        Debug.Assert(visionCamera, "No whiteboard camera detected. No whiteboard shots can be made. Set up a camera and put CameraCapture on it. Make sure it can see the whole whiteboard.");
 
         ReadPromptVariables();
         // add ANTHROPIC_API_KEY to environment variables and insert your key. You can make an account at https://console.anthropic.com/dashboard and generate a key.
@@ -121,9 +119,9 @@ public class Ai_Manager : MonoBehaviour
                             "There is a pill-shaped person you are talking to.\n" +
                             "Your words will appear physically next to you as you say them.\n" +
                             "Respond how you feel is proper for this role. Do not mention your appearance unless prompted.\n" +
-                            "Keep you responses short and to the point.\n" +
                             "Don't use action text in asterisks such as: *nods* or *turns slightly*.\n" +
-                            "If you laugh, use 'ha's for based on intensity. \nIf you say nothing, use an ellipse. '...'\n";
+                            "If you laugh, use 'ha's for based on intensity. \nIf you say nothing, use an ellipse. '...'\n" +
+                            "Be Concise.";
         }
     }
 
@@ -142,6 +140,7 @@ public class Ai_Manager : MonoBehaviour
         inputBox.text = "";
     }
 
+
     public void GenerateAiResponse()
     {
         ClearResponseBox();
@@ -149,6 +148,9 @@ public class Ai_Manager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Call this function when sending an image to the AI
+    /// </summary>
     public void GenerateAiResponseWithImage()
     {
 

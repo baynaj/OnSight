@@ -3039,6 +3039,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1460393459}
     m_Modifications:
+    - target: {fileID: 5995912718513565632, guid: 20ca02d49db4b1c40a3e5278cc2361c5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5995912718520516640, guid: 20ca02d49db4b1c40a3e5278cc2361c5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12591,6 +12596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skinnedMeshRenderer: {fileID: 1112854200}
+  skinnedMesh: {fileID: 0}
 --- !u!4 &1460393459
 Transform:
   m_ObjectHideFlags: 0

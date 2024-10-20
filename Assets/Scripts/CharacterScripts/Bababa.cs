@@ -21,7 +21,7 @@ public class Bababa : MonoBehaviour
     void Start()
     {
         //blendShapeCount = skinnedMesh.blendShapeCount;
-        InvokeRepeating(nameof(SetMouthPosition), 0, 0.02f);
+        InvokeRepeating(nameof(SetMouthPosition), 0, 0.1f);
     }
 
     void Update()
@@ -34,7 +34,7 @@ public class Bababa : MonoBehaviour
         isBaing = !isBaing;
         
         if (isBaing)
-            skinnedMeshRenderer.SetBlendShapeWeight(4, 100);
+            skinnedMeshRenderer.SetBlendShapeWeight((int)Phonem.AA, 100);
         else
             skinnedMeshRenderer.SetBlendShapeWeight(4, 0);
 

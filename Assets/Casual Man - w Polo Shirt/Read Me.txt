@@ -1,0 +1,55 @@
+casual style man polo shirt
+
+This is a simple low polygon 3d model, but with great visual quality.
+The Model is set to Unity Avatar Humanoid. Which makes it possible to 
+import Humanoid-type animations. These animations can be purchased from 
+the Unity Asset Store. However, this model comes with a pack of free 
+animations that can be used as the basis of your game and can even be
+reused with other models that are compatible with 
+Unity's Avatar Humanoid system.
+
+The model also has a number of Blendshapes that can control its facial expressions. 
+You can access them from the Inspector of the "Man" mesh that is nested in the prefabs. 
+No previous animation was created for them, however you can use them for example in VRChat 
+or through a lip sync tool such as Papagayo.
+
+
+
+Folders Content
+
+Animations -----------------------------------------------------------------------------------------
+
+a folder named Animations with a collection of free animations,
+plus extra animations for you to use as you wish
+only compatible with Humanoid Avatar)
+
+Animator Controller --------------------------------------------------------------------------------
+
+This folder contains just an example of the character controller used in the example scene.
+To control your character you will have to create a character controller that suits your needs
+
+FBX ------------------------------------------------------------------------------------------------
+
+This folder contains the original character model from which the example Prefabs were generated.
+
+Materias --------------------------------------------------------------------------------------------
+
+It contains two subfolders, one contains three material variations for the character, 
+one being a high definition material, another standard definition material and 
+a material dedicated to mobile games, the other folder contains material 
+relating to the example scene only.
+
+Prefab --------------------------------------------------------------------------------------------------
+
+
+This folder contains three prefabs of the character, one with high quality textures, another with medium 
+quality textures, and another with medium quality textures in addition to a material aimed at mobile games.
+
+
+Scene ----------------------------------------------------------------------------------------------------
+
+This folder contains an example scene with the three types of model prefabs.
+
+Textures --------------------------------------------------------------------------------------------------
+
+Contains character textures with 1k quality and reworked versions with 4k quality

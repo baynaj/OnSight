@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a0aaa9a597f693c42a5d97abe8d550dd
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 44429
+  packageName: Modern Female Prefessional Secretary
+  packageVersion: 5.1
+  assetPath: Assets/AllStarCharacterLibray/Scripts/MouseOrbit.cs
+  uploadId: 95100

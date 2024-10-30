@@ -36,6 +36,7 @@ public class Ai_Manager : MonoBehaviour
         Models.Claude3Opus 
     };
 
+
     public ManagerModels activeModel = ManagerModels.Claude3_Haiku;
 
     [Header("--- SETTINGS ---")]

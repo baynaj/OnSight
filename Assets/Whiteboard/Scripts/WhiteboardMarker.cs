@@ -21,6 +21,7 @@ public class WhiteboardMarker : MonoBehaviour
     private bool _hitLastFrame;
 
     public bool isEraser = false;
+    public bool lockRotation = true;
 
     [Tooltip("How much drawing is interpolated from 0 to 1.")]
     [SerializeField] private float _drawSmoothing = 0.025f;
@@ -91,7 +92,8 @@ public class WhiteboardMarker : MonoBehaviour
                         _detectedWhiteboard.texture.SetPixels(lerpX, lerpY, _tipSize, _tipSize, _colors);
                     }
 
-                    //transform.rotation = _lastHitrot;
+                    if(lockRotation)
+                        transform.rotation = _lastHitrot;
 
                     _detectedWhiteboard.texture.Apply();
                 }

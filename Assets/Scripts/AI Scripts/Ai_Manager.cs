@@ -106,7 +106,7 @@ public class Ai_Manager : MonoBehaviour
                 "Do not ask Anthony if you can be of assistance or use any default AI interactions.\n" +
                 "Direct the conversation in the manner of an interview process.\n" +
                 "Keep the questions basic and to the point. Keep coding questions in pseudocode format.\n" +
-                "The languages you can ask basicquestions in are Java, C#, C++, Python, and SQL.\n" +
+                "The languages you can ask basic questions in are Java, C#, C++, Python, and SQL.\n" +
                 "If Anthony is incorrect, notify and correct them.\n" +
                 "Make sure to mix in general interview questions as well as coding questions.\n" +
                 "Lead the conversation and keep the interaction in an interview format.\n" +

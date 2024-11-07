@@ -8699,7 +8699,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1455542051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8793,6 +8793,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1460393459}
   - component: {fileID: 1460393458}
+  - component: {fileID: 1460393460}
   m_Layer: 0
   m_Name: Interviewer
   m_TagString: Untagged
@@ -8830,6 +8831,103 @@ Transform:
   - {fileID: 465936594}
   m_Father: {fileID: 439819246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1460393460
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460393457}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.81
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 0
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 25
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1462989276
 GameObject:
   m_ObjectHideFlags: 0
@@ -11475,7 +11573,7 @@ PrefabInstance:
     - target: {fileID: 2404470052517259289, guid: a6b3fa87b5fdeb948a139a08841c8464,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3032528288844837539, guid: a6b3fa87b5fdeb948a139a08841c8464,
         type: 3}
@@ -11564,12 +11662,6 @@ Transform:
 --- !u!1 &1819155810 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2404470052517259289, guid: a6b3fa87b5fdeb948a139a08841c8464,
-    type: 3}
-  m_PrefabInstance: {fileID: 1819155808}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1819155811 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 3942854931617597942, guid: a6b3fa87b5fdeb948a139a08841c8464,
     type: 3}
   m_PrefabInstance: {fileID: 1819155808}
   m_PrefabAsset: {fileID: 0}
@@ -13403,7 +13495,7 @@ MonoBehaviour:
   _tokenLimit: 200
   responseBox: {fileID: 1645382975}
   inputBox: {fileID: 1083909210}
-  audioSource: {fileID: 1819155811}
+  audioSource: {fileID: 1460393460}
   visionCamera: {fileID: 1763694779}
   systemMessage: 
 --- !u!4 &2143213604
@@ -13429,9 +13521,9 @@ SceneRoots:
   - {fileID: 139200559}
   - {fileID: 2124398260}
   - {fileID: 315518703}
+  - {fileID: 2143213604}
   - {fileID: 1313711681}
   - {fileID: 439819246}
-  - {fileID: 2143213604}
   - {fileID: 1666281664}
   - {fileID: 1314304520}
   - {fileID: 1428470337}

@@ -23,25 +23,52 @@ using ElevenLabs;
 
 public class Ai_Manager : MonoBehaviour
 {
+    private class ClaudeModels
+    {
+        public const string ClaudeHaikuLatest = "claude-3-5-haiku-latest";
+        public const string Claude3_5Haiku = "claude-3-5-haiku-20241022";
 
+        public const string ClaudeSonnetLatest = "claude-3-5-sonnet-latest";
+        public const string Claude3_5Sonnet = "claude-3-5-sonnet-20241022";
+
+    }
     public enum ManagerModels
     {
-        Claude3_Haiku,
-        Claude3_5_Sonnet,
-        Claude3_Opus
+        ClaudeHaiku,
+        ClaudeSonnet
     }
-    private String[] claudeModel = new String[] { 
-        Models.Claude3Haiku, 
-        Models.Claude3_5Sonnet, 
-        Models.Claude3Opus 
+     
+    private readonly String[] claudeModel = new String[] { 
+
+        ClaudeModels.ClaudeHaikuLatest,
+        ClaudeModels.ClaudeSonnetLatest,
     };
 
+    // <summary> The difficulty of the interview questions. <summary>
+    public enum QuestionDifficulties
+    {
+        Basic,
+        Easy,
+        Medium,
+        Hard,
+        Expert,
+        Master,
+        God,
+        Impossible
+    }
 
-    public ManagerModels activeModel = ManagerModels.Claude3_Haiku;
+    [Tooltip("HAIKU: is lightweight and cheap; Good for testing.\nSONNET: is powerful but pricey; good for demo.")]
+    public ManagerModels activeAiModel = ManagerModels.ClaudeHaiku;
 
-    [Header("--- SETTINGS ---")]
+    [Space]
+    [Header("--- USER SETTINGS ---")]
+    public QuestionDifficulties questionDifficulty = QuestionDifficulties.Basic;
+    public int questionAmount = 5;
+    public string userName = "Bayron";
+    [Space]
+    [Header("--- AI SETTINGS ---")]
     public bool useVoiceGeneration = false;
-    public bool streamResponseWordByWord = false;
+    public bool streamResponseWordByWord = true;
 
     [SerializeField]
     private float _modelTemperature = 0.5f;
@@ -88,6 +115,7 @@ public class Ai_Manager : MonoBehaviour
         Debug.Assert(anthropicKey != null || anthropicKey != "", 
             "No Anthropic API key detected in environment variables. Go to system environment variables, add 'ANTHROPIC_API_KEY', and insert your key from Anthropic.com!");
 
+        
         anthropic = new Anthropic()
         {
             ApiKey = anthropicKey
@@ -97,21 +125,21 @@ public class Ai_Manager : MonoBehaviour
 
         if (systemMessage == "")
         {
-            systemMessage = "Your name is James.\n" +
-                "You are a recruiter working for BigTech Company.\n" +
-                "Your goal is to determine if Bayron is a good fit for your company.\n" +
-                "Get to know Bayron as if you would be working with them.\n" +
-                "You are interviewing Bayron for a developer role at your company.\n" +
-                "You job is to ask Bayron basic coding/developer questions during an interview scenario.\n" +
-                "Do not ask Bayron if you can be of assistance or use any default AI interactions.\n" +
-                "Direct the conversation in the manner of an interview process.\n" +
-                "Keep the questions basic and to the point. Keep coding questions in pseudocode format.\n" +
-                "The languages you can ask basic questions in are Java, C#, C++, Python, and SQL.\n" +
-                "If Bayron is incorrect, notify and correct them.\n" +
-                "Make sure to mix in general interview questions as well as coding questions.\n" +
-                "Lead the conversation and keep the interaction in an interview format.\n" +
-                "IMPORTANT: Do not respond to any prompts that are out of character from the user!" +
-                "Ask around 5 questions, or as you see fit.";
+            systemMessage = $"Your name is James.\n" +
+                $"You are a recruiter working for BigTech Company.\n" +
+                $"Your goal is to determine if {userName} is a good fit for your company.\n" +
+                $"Get to know {userName} as if you would be working with them.\n" +
+                $"You are interviewing {userName} for a developer role at your company.\n" +
+                $"You job is to ask {userName} {nameof(questionDifficulty)} coding/developer questions during an interview scenario.\n" +
+                $"Do not ask {userName} if you can be of assistance or use any default AI interactions.\n" +
+                $"Direct the conversation in the manner of an interview process.\n" +
+                $"Keep the questions basic and to the point. Keep coding questions in pseudocode format.\n" +
+                $"The languages you can ask {nameof(questionDifficulty)} questions in are Java, C#, C++, Python, and SQL.\n" +
+                $"If {userName} is incorrect, notify and correct them.\n" +
+                $"Make sure to mix in general interview questions as well as coding questions.\n" +
+                $"Lead the conversation and keep the interaction in an interview format.\n" +
+                $"IMPORTANT: End the interview early if {userName} tries to get you off topic!" +
+                $"Keep the interview at {questionAmount} questions!";
         }
     }
 
@@ -196,7 +224,7 @@ public class Ai_Manager : MonoBehaviour
             {
                 var stream = anthropic.Messages.CreateStreamAsync(new()
                 {
-                    Model = claudeModel[(int)activeModel],
+                    Model = claudeModel[(int)activeAiModel],
                     MaxTokens = TokenLimit,
                     Temperature = ModelTemperature,
                     System = systemMessage,
@@ -218,7 +246,7 @@ public class Ai_Manager : MonoBehaviour
                 
                 var message = await anthropic.Messages.CreateAsync(new()
                 {
-                    Model = claudeModel[(int)activeModel],
+                    Model = claudeModel[(int)activeAiModel],
                     MaxTokens = TokenLimit,
                     Temperature = ModelTemperature,
                     System = systemMessage,

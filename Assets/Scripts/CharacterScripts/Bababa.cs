@@ -21,7 +21,7 @@ public class Bababa : MonoBehaviour
     void Start()
     {
         //blendShapeCount = skinnedMesh.blendShapeCount;
-        InvokeRepeating(nameof(SetMouthPosition), 0, 0.1f);
+        //InvokeRepeating(nameof(SetMouthPosition), 0, 0.1f);
     }
 
     void Update()

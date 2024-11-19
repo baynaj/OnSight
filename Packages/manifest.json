@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.huggingface.api": "https://github.com/huggingface/unity-api.git",
     "com.rest.elevenlabs": "3.3.1",
     "com.unity.ai.navigation": "2.0.4",
     "com.unity.collab-proxy": "2.4.3",

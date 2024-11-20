@@ -53,8 +53,6 @@ public class Ai_Manager : MonoBehaviour
         Hard,
         Expert,
         Master,
-        God,
-        Impossible
     }
 
     [Tooltip("HAIKU: is lightweight and cheap; Good for testing.\nSONNET: is powerful but pricey; good for demo.")]
@@ -65,8 +63,10 @@ public class Ai_Manager : MonoBehaviour
     public QuestionDifficulties questionDifficulty = QuestionDifficulties.Basic;
     public int questionAmount = 5;
     public string userName = "Bayron";
+    public string questionLanguage = "C#";
     [Space]
     [Header("--- AI SETTINGS ---")]
+    public string interviewerName = "James";
     public bool useVoiceGeneration = false;
     public bool streamResponseWordByWord = true;
 
@@ -114,32 +114,39 @@ public class Ai_Manager : MonoBehaviour
         string anthropicKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
         Debug.Assert(anthropicKey != null || anthropicKey != "", 
             "No Anthropic API key detected in environment variables. Go to system environment variables, add 'ANTHROPIC_API_KEY', and insert your key from Anthropic.com!");
-
         
         anthropic = new Anthropic()
         {
             ApiKey = anthropicKey
         };
+    }
 
-
+    void Awake()
+    {
+        //TODO: using these variables to set up interview parameters.
+        userName = PlayerPrefs.GetString("UserName");
+        //interviewerName = PlayerPrefs.GetString("InterviewerName");
+        //questionAmount = PlayerPrefs.GetInt("QuestionAmount");
 
         if (systemMessage == "")
         {
-            systemMessage = $"Your name is James.\n" +
+            systemMessage = 
+                $"Your name is {interviewerName}.\n" +
                 $"You are a recruiter working for BigTech Company.\n" +
                 $"Your goal is to determine if {userName} is a good fit for your company.\n" +
                 $"Get to know {userName} as if you would be working with them.\n" +
                 $"You are interviewing {userName} for a developer role at your company.\n" +
-                $"You job is to ask {userName} {nameof(questionDifficulty)} coding/developer questions during an interview scenario.\n" +
+                $"You job is to ask {userName} {questionDifficulty.ToString()} coding/developer questions during an interview scenario.\n" +
                 $"Do not ask {userName} if you can be of assistance or use any default AI interactions.\n" +
                 $"Direct the conversation in the manner of an interview process.\n" +
                 $"Keep the questions basic and to the point. Keep coding questions in pseudocode format.\n" +
-                $"The languages you can ask {nameof(questionDifficulty)} questions in are Java, C#, C++, Python, and SQL.\n" +
+                $"The languages you can ask {questionDifficulty.ToString()} questions in are {questionLanguage}.\n" +
                 $"If {userName} is incorrect, notify and correct them.\n" +
                 $"Make sure to mix in general interview questions as well as coding questions.\n" +
                 $"Lead the conversation and keep the interaction in an interview format.\n" +
                 $"IMPORTANT: End the interview early if {userName} tries to get you off topic!" +
-                $"Keep the interview at {questionAmount} questions!";
+                $"Keep the interview at {questionAmount} questions!" +
+                $"Be concise!";
         }
     }
 
@@ -159,10 +166,10 @@ public class Ai_Manager : MonoBehaviour
     }
 
 
-    public void GenerateAiResponse()
+    public void GenerateAiResponse(string inputPrompt)
     {
         ClearResponseBox();
-        GetClaudeResponse(inputBox.text, null, streamResponseWordByWord);
+        GetClaudeResponse(inputPrompt, null, streamResponseWordByWord);
         
     }
 

@@ -129,7 +129,7 @@ public class GameStartMenu : MonoBehaviour
             
             Debug.Log("username saved: " + PlayerPrefs.GetString("UserName"));
             // Start the game
-            //StartGame();
+            StartGame();
         }
         else
         {

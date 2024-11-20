@@ -13,6 +13,7 @@ public class SpeechRecognition : MonoBehaviour
     [SerializeField] private bool _recording;
     [SerializeField] private TMP_Text _recognizedText;
     //[SerializeField] private TextMeshProUGUI _recognizedText;
+    public Ai_Manager AI_Manager;
 
     private AudioClip _audioClip;
     private byte[] _audioData;
@@ -22,6 +23,7 @@ public class SpeechRecognition : MonoBehaviour
     void Start()
     {
         //StartRecording();
+        
     }
 
     public void StartRecording()
@@ -60,6 +62,7 @@ public class SpeechRecognition : MonoBehaviour
         HuggingFaceAPI.AutomaticSpeechRecognition(_audioData, (response) =>
         {
             _recognizedText.text = response;
+            AI_Manager.GenerateAiResponse(response);
         }, error =>
         {
            _recognizedText.text = error;

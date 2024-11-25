@@ -11,14 +11,14 @@ public class GameStartMenu : MonoBehaviour
     public GameObject options;
     public GameObject about;
     //public GameObject recordName;
-    public GameObject typeName;
+    public GameObject enterName;
 
     [Header("Main Menu Buttons")]
     public Button startButton;
     public Button optionButton;
     public Button aboutButton;
     //public Button recordNameButton;
-    public Button typeNameButton;
+    public Button enterNameButton;
     public Button quitButton;
     public Button submitButton;
 
@@ -33,11 +33,12 @@ public class GameStartMenu : MonoBehaviour
 
         //Hook events
         //startButton.onClick.AddListener(StartGame); // not needed for now since we have multiple scenes to choose from
+        startButton.onClick.AddListener(EnableTypeName);
         optionButton.onClick.AddListener(EnableOption);
         aboutButton.onClick.AddListener(EnableAbout);
         quitButton.onClick.AddListener(QuitGame);
         //recordNameButton.onClick.AddListener(EnableRecordName);
-        typeNameButton.onClick.AddListener(EnableTypeName);
+        //typeNameButton.onClick.AddListener(EnableTypeName);
         submitButton.onClick.AddListener(OnSubmit);
 
         foreach (var item in returnButtons)
@@ -68,7 +69,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(false);
         about.SetActive(false);
         //recordName.SetActive(false);
-        typeName.SetActive(false);
+        enterName.SetActive(false);
     }
 
     public void EnableMainMenu()
@@ -77,7 +78,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(false);
         about.SetActive(false);
         //recordName.SetActive(false);
-        typeName.SetActive(false);
+        enterName.SetActive(false);
     }
     public void EnableOption()
     {
@@ -85,7 +86,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(true);
         about.SetActive(false);
         //recordName.SetActive(false);
-        typeName.SetActive(false);
+        enterName.SetActive(false);
     }
     public void EnableAbout()
     {
@@ -93,7 +94,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(false);
         about.SetActive(true);
         //recordName.SetActive(false);
-        typeName.SetActive(false);
+        enterName.SetActive(false);
     }
     public void EnableRecordName()
     {
@@ -101,7 +102,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(false);
         about.SetActive(false);
         //recordName.SetActive(true);
-        typeName.SetActive(false);
+        enterName.SetActive(false);
     }
     public void EnableTypeName()
     {
@@ -109,7 +110,7 @@ public class GameStartMenu : MonoBehaviour
         options.SetActive(false);
         about.SetActive(false);
         //recordName.SetActive(false);
-        typeName.SetActive(true);
+        enterName.SetActive(true);
         
     }
 

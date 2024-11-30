@@ -2,18 +2,44 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ElevenLabs-DotNet</id>
-    <version>2.2.1</version>
+    <version>3.4.1</version>
     <title>ElevenLabs-DotNet</title>
     <authors>Stephen Hodgson</authors>
     <license type="file">LICENSE</license>
     <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
-    <icon>ElevenLabsIcon.png</icon>
+    <icon>Assets/ElevenLabsIcon.png</icon>
     <readme>README.md</readme>
     <projectUrl>https://github.com/RageAgainstThePixel/ElevenLabs-DotNet</projectUrl>
     <description>A non-official Eleven Labs voice synthesis RESTful client.
 I am not affiliated with Eleven Labs and an account with api access is required.
 All copyrights, trademarks, logos, and assets are the property of their respective owners.</description>
-    <releaseNotes>Version 2.2.1
+    <releaseNotes>Version 3.4.1
+- Removed text length check in TextToSpeechRequest
+Version 3.4.0
+- Added additional request properties for TextToSpeechRequest
+  - previous_text, next_text, previous_request_ids, next_request_ids, languageCode, withTimestamps
+- Added support for transcription timestamps in TextToSpeechResponse
+- Added support for language code in TextToSpeechRequest
+Version 3.1.0
+- Refactored TextToSpeechEndpoint endpoint to accept TextToSpeechRequest object
+  - Added text encoding options to TextToSpeechRequest
+  - Added previous text input parameter to TextToSpeechRequest
+Version 3.0.3
+- Fix DubbingRequest.DropBackgroundAudio flag not properly being set
+- Added DubbingRequest.UseProfanityFilter flag
+Version 3.0.2
+- Cleanup and polish for Dubbing API
+Version 3.0.1
+- Updated Models
+Version 3.0.0
+- Updated to .NET 8.0
+- Added ability to specify fully customizable domain proxies
+- Added environment variable parsing for ELEVENLABS_API_KEY
+- Added SoundEffects API endpoints
+- Added Dubbing API endpoints
+- Updated default models
+- Fixed adding and editing voices
+Version 2.2.1
 - Misc formatting changes
 Version 2.2.0
 - Changed ElevenLabsClient to be IDisposable
@@ -109,9 +135,9 @@ Version 1.0.0
 - Initial Release!</releaseNotes>
     <copyright>2024</copyright>
     <tags>ElevenLabs, AI, ML, Voice, TTS</tags>
-    <repository type="git" url="https://github.com/RageAgainstThePixel/ElevenLabs-DotNet" commit="9e89efeee260fbb8ceb727a7fe0372d022b0a77c" />
+    <repository type="git" url="https://github.com/RageAgainstThePixel/ElevenLabs-DotNet" commit="988443396090ad77714b6bae7a4bbcedc3e88f02" />
     <dependencies>
-      <group targetFramework="net6.0" />
+      <group targetFramework="net8.0" />
     </dependencies>
   </metadata>
 </package>

@@ -1,5 +1,3 @@
-
-
 using UnityEngine;
 using UnityEditor;
 using Claudia;
@@ -15,13 +13,10 @@ using UnityEngine.UI;
 
 using static System.Net.Mime.MediaTypeNames;
 using ElevenLabs;
+using ElevenLabs.TextToSpeech;
 
 
-
-
-
-
-public class Ai_Manager : MonoBehaviour
+public class AI_Manager : MonoBehaviour
 {
     private class ClaudeModels
     {
@@ -69,6 +64,11 @@ public class Ai_Manager : MonoBehaviour
     public string interviewerName = "James";
     public bool useVoiceGeneration = false;
     public bool streamResponseWordByWord = true;
+    [Tooltip("Number of past images to send to AI for viewing. Speeds up responses and lowers cost to stay below 5")]
+    public int maxSentImages = 3;
+    [Space]
+    //convert AI messages into a saveable array
+    
 
     [SerializeField]
     private float _modelTemperature = 0.5f;
@@ -100,7 +100,7 @@ public class Ai_Manager : MonoBehaviour
     public Camera visionCamera;
 
 
-    [TextArea(1, 50)]
+    [TextArea(5,50)]
     public string systemMessage = "";
 
     private Anthropic anthropic;
@@ -119,6 +119,8 @@ public class Ai_Manager : MonoBehaviour
         {
             ApiKey = anthropicKey
         };
+
+        ListAvailableVoices();
     }
 
     void Awake()
@@ -127,6 +129,7 @@ public class Ai_Manager : MonoBehaviour
         userName = PlayerPrefs.GetString("UserName");
         //interviewerName = PlayerPrefs.GetString("InterviewerName");
         //questionAmount = PlayerPrefs.GetInt("QuestionAmount");
+
 
         if (systemMessage == "")
         {
@@ -149,6 +152,7 @@ public class Ai_Manager : MonoBehaviour
                 $"Be concise!";
         }
     }
+
 
     private void ReadPromptVariables()
     {
@@ -197,7 +201,7 @@ public class Ai_Manager : MonoBehaviour
     
 
 
-    public async void GetClaudeResponse(string inputMessage = null, string imageBytes = null, bool streamResponse = false)
+    private async void GetClaudeResponse(string inputMessage = null, string imageBytes = null, bool streamResponse = false)
     {
         ReadPromptVariables();
         if (responseBox && inputBox)
@@ -271,7 +275,7 @@ public class Ai_Manager : MonoBehaviour
         }
     }
 
-    public void StreamMessageToBox(string message, TMP_Text responseTextBox)
+    private void StreamMessageToBox(string message, TMP_Text responseTextBox)
     {
         _response += message;
         responseTextBox.text = _response;
@@ -334,6 +338,16 @@ public class Ai_Manager : MonoBehaviour
         return builtMessage;
     }
 
+    private async void ListAvailableVoices()
+    {
+        var elevenLabsAPIKey = new ElevenLabsClient(new ElevenLabsAuthentication().LoadFromEnvironment());
+
+        var results = await elevenLabsAPIKey.SharedVoicesEndpoint.GetSharedVoicesAsync();
+        foreach (var foundVoice in results.Voices)
+        {
+            Debug.Log($"{foundVoice.OwnerId} | {foundVoice.VoiceId} | {foundVoice.Date} | {foundVoice.Name}");
+        }
+    }
 
     private string TrimFlavorText(string textInput)
     {
@@ -347,10 +361,13 @@ public class Ai_Manager : MonoBehaviour
         // add ELEVEN_LABS_API_KEY to environment variables and insert your key. You can make a free account at https://elevenlabs.io/ and generate a key.
         var elevenLabsAPIKey = new ElevenLabsClient(new ElevenLabsAuthentication().LoadFromEnvironment());
         var text = TrimFlavorText(textInput);
-		
-        var voice = (await elevenLabsAPIKey.VoicesEndpoint.GetAllVoicesAsync()).FirstOrDefault();
-        var defaultVoiceSettings = await elevenLabsAPIKey.VoicesEndpoint.GetDefaultVoiceSettingsAsync();
-        var voiceClip = await elevenLabsAPIKey.TextToSpeechEndpoint.TextToSpeechAsync(text, voice, defaultVoiceSettings);
+
+        var voice = (await elevenLabsAPIKey.VoicesEndpoint.GetAllVoicesAsync())[1];
+
+        //var voice = await elevenLabsAPIKey.VoicesEndpoint.GetVoiceAsync("86ZLAUcyPNBrbdJKn3u6");
+        //var voice = (await elevenLabsAPIKey.VoicesEndpoint.GetVoiceAsync("Chris"));
+        var request = new TextToSpeechRequest(voice, text);
+        var voiceClip = await elevenLabsAPIKey.TextToSpeechEndpoint.TextToSpeechAsync(request);
         audioSource.PlayOneShot(voiceClip.AudioClip);
     }
 }

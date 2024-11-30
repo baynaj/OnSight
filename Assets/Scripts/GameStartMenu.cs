@@ -10,7 +10,7 @@ public class GameStartMenu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject options;
     public GameObject about;
-    //public GameObject recordName;
+    public GameObject recordName;
     public GameObject enterName;
 
     [Header("Main Menu Buttons")]
@@ -24,13 +24,15 @@ public class GameStartMenu : MonoBehaviour
 
     public TMP_InputField nameInputField;
 
+    public VRKeyboardController vrKeyboardController;
+
     public List<Button> returnButtons;
 
     // Start is called before the first frame update
     void Start()
     {
+        nameInputField.onSelect.AddListener(delegate { EnableVRKeyboard(); });
         EnableMainMenu();
-
         //Hook events
         //startButton.onClick.AddListener(StartGame); // not needed for now since we have multiple scenes to choose from
         startButton.onClick.AddListener(EnableTypeName);
@@ -68,7 +70,7 @@ public class GameStartMenu : MonoBehaviour
         mainMenu.SetActive(false);
         options.SetActive(false);
         about.SetActive(false);
-        //recordName.SetActive(false);
+        recordName.SetActive(false);
         enterName.SetActive(false);
     }
 
@@ -77,7 +79,7 @@ public class GameStartMenu : MonoBehaviour
         mainMenu.SetActive(true);
         options.SetActive(false);
         about.SetActive(false);
-        //recordName.SetActive(false);
+        recordName.SetActive(false);
         enterName.SetActive(false);
     }
     public void EnableOption()
@@ -85,7 +87,7 @@ public class GameStartMenu : MonoBehaviour
         mainMenu.SetActive(false);
         options.SetActive(true);
         about.SetActive(false);
-        //recordName.SetActive(false);
+        recordName.SetActive(false);
         enterName.SetActive(false);
     }
     public void EnableAbout()
@@ -93,7 +95,7 @@ public class GameStartMenu : MonoBehaviour
         mainMenu.SetActive(false);
         options.SetActive(false);
         about.SetActive(true);
-        //recordName.SetActive(false);
+        recordName.SetActive(false);
         enterName.SetActive(false);
     }
     public void EnableRecordName()
@@ -109,9 +111,30 @@ public class GameStartMenu : MonoBehaviour
         mainMenu.SetActive(false);
         options.SetActive(false);
         about.SetActive(false);
-        //recordName.SetActive(false);
         enterName.SetActive(true);
-        
+        recordName.SetActive(true);
+    }
+
+    public void EnableVRKeyboard()
+    {
+        vrKeyboardController.ShowKeyboard(nameInputField);
+
+        Debug.Log($"VRKeyboard active status: {vrKeyboardController.vrKeyboard.activeInHierarchy}");
+        Debug.Log($"recordName active status before: {recordName.activeSelf}");
+
+        if (vrKeyboardController.vrKeyboard.activeInHierarchy)
+        {
+            recordName.SetActive(false);
+        }
+    }
+
+    public void ReactivateRecordNameButton()
+    {
+        if (recordName != null)
+        {
+            recordName.SetActive(true); // Reactivate the recordName button
+            Debug.Log("recordName button reactivated");
+        }
     }
 
     public void OnSubmit()

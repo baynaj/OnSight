@@ -19,7 +19,7 @@ public class AI_EventResponse : MonoBehaviour
     void Start()
     {
         Debug.Assert(eventMessage != "", "Event message is empty! Event will be deactivated!");
-        Debug.Assert(promptedAI == null, "No AI Manager selected! Event will be deactivated!");
+        Debug.Assert(promptedAI != null, "No AI Manager selected! Event will be deactivated!");
         if (eventMessage == "" || promptedAI == null) gameObject.SetActive(false);
         
     }

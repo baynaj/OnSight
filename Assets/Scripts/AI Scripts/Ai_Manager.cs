@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using TMPro;
+using System.Text.RegularExpressions;
 using UnityEngine.Audio;
 using System.Linq;
 using ElevenLabs.Models;
@@ -14,6 +15,7 @@ using UnityEngine.UI;
 using static System.Net.Mime.MediaTypeNames;
 using ElevenLabs;
 using ElevenLabs.TextToSpeech;
+using static UnityEngine.InputSystem.InputRemoting;
 
 
 public class AI_Manager : MonoBehaviour
@@ -91,9 +93,11 @@ public class AI_Manager : MonoBehaviour
             _tokenLimit = (int)Mathf.Clamp(value,0,1000);
         }
     }
+    
+    
+    private string _response = "";
 
     [Header("--- CONNECTIONS ---")]
-    private string _response = "";
     public TMP_Text responseBox = null;
     public TMP_InputField inputBox = null;
     public AudioSource audioSource; 
@@ -102,6 +106,10 @@ public class AI_Manager : MonoBehaviour
 
     [TextArea(5,50)]
     public string systemMessage = "";
+
+    [Header("--- MESSAGES ---")]
+    public List<Claudia.Message> messageLog = new();
+
 
     private Anthropic anthropic;
 
@@ -120,7 +128,7 @@ public class AI_Manager : MonoBehaviour
             ApiKey = anthropicKey
         };
 
-        ListAvailableVoices();
+        //ListAvailableVoices();
     }
 
     void Awake()
@@ -149,6 +157,7 @@ public class AI_Manager : MonoBehaviour
                 $"Lead the conversation and keep the interaction in an interview format.\n" +
                 $"IMPORTANT: End the interview early if {userName} tries to get you off topic!" +
                 $"Keep the interview at {questionAmount} questions!" +
+                $"Before you terminate the intervew, print a non-conversation readout of how they did from 0 to 10 in various fields." +
                 $"Be concise!";
         }
     }
@@ -167,6 +176,11 @@ public class AI_Manager : MonoBehaviour
     public void ClearInputBox()
     {
         inputBox.text = "";
+    }
+
+    public void GenerateInputBoxResponse()
+    {
+        GenerateAiResponse(inputBox.text);
     }
 
 
@@ -197,10 +211,6 @@ public class AI_Manager : MonoBehaviour
         ClearResponseBox();
     }
 
-
-    
-
-
     private async void GetClaudeResponse(string inputMessage = null, string imageBytes = null, bool streamResponse = false)
     {
         ReadPromptVariables();
@@ -208,29 +218,38 @@ public class AI_Manager : MonoBehaviour
         {
             Debug.Log("Sending message to Claude...");
 
-            string userMessage = inputMessage;
+            //string userMessage = inputMessage;
             //Debug.Log(systemMessage);
             //Debug.Log("User: " + userMessage);
 
             // Determine if its text only | image + text | image | or nothing for a continuation
-            Claudia.Message[] sentMessage;
+            Claudia.Message sentMessage = null;
 
             // append the created message blocks to the sentMessage array
 
             if (inputMessage != null && imageBytes == null)
             {
-                sentMessage = CreateClaudiaTextBlock(inputMessage);
+                sentMessage = CreateUserTextBlock(inputMessage);
             }
             else if (imageBytes != null)
             {
-                sentMessage = BuildClaudiaMessage(inputMessage ?? "", imageBytes);
+                sentMessage = BuildClaudiaUserMessage(inputMessage ?? "", imageBytes);
             }
             else
             {
-                sentMessage = PromptClaudeContinuation();
+                //sentMessage = PromptClaudeContinuation();
             }
 
+            messageLog.Add(sentMessage);
 
+
+            //Debug.Log($"Total messages: {messageArray.Length}");
+            //Debug.Log($"'{sentMessage}' added to {messageArray}");
+            foreach (Claudia.Message message in messageLog.ToArray())
+            {
+                Debug.Log($"A Message: {message.ToString()}");
+            }
+            
             if (streamResponse)
             {
                 var stream = anthropic.Messages.CreateStreamAsync(new()
@@ -239,7 +258,8 @@ public class AI_Manager : MonoBehaviour
                     MaxTokens = TokenLimit,
                     Temperature = ModelTemperature,
                     System = systemMessage,
-                    Messages = sentMessage
+                    //Messages = sentMessage
+                    Messages = messageLog.ToArray()
 
                 });
 
@@ -252,19 +272,22 @@ public class AI_Manager : MonoBehaviour
                     }
                 }
             }
+            // if we are generating responses as a chunk
             else
             {
-                
+
                 var message = await anthropic.Messages.CreateAsync(new()
                 {
                     Model = claudeModel[(int)activeAiModel],
                     MaxTokens = TokenLimit,
                     Temperature = ModelTemperature,
                     System = systemMessage,
-                    Messages = sentMessage
+                    //Messages = sentMessage
+                    Messages = messageLog.ToArray()
                 });
 
                 StreamMessageToBox(message.ToString(), responseBox);
+                messageLog.Add(CreateAssistantTextBlock(message.ToString()));
 
             }
 
@@ -281,12 +304,23 @@ public class AI_Manager : MonoBehaviour
         responseTextBox.text = _response;
     }
 
-    private Claudia.Message[] CreateClaudiaTextBlock(string text)
+
+    private Claudia.Message CreateUserTextBlock(string text)
     {
-        return new Claudia.Message[] { new() {
-            Role = Roles.User, 
+        return new Claudia.Message
+        {
+            Role = Roles.User,
             Content = text
-        }};
+        };
+    }
+
+    private Claudia.Message CreateAssistantTextBlock(string text)
+    {
+        return new Claudia.Message
+        {
+            Role = Roles.Assistant,
+            Content = text
+        };
     }
 
     private Claudia.Message[] PromptClaudeContinuation()
@@ -297,13 +331,11 @@ public class AI_Manager : MonoBehaviour
         }};
     }
 
-    private Claudia.Message[] BuildClaudiaMessage(string text, string imagePath)
+    private Claudia.Message BuildClaudiaUserMessage(string text, string imagePath)
     {
         var imageBytes = File.ReadAllBytes(imagePath);
-
         Contents contentBlocks = new() { };
-
-        if (imagePath != null && imagePath != "") 
+        if (imagePath != null && imagePath != "")
         {
             contentBlocks.Add(
                 new Content
@@ -330,14 +362,14 @@ public class AI_Manager : MonoBehaviour
             );
         }
 
-        Claudia.Message[] builtMessage = new Claudia.Message[] { new() {
+        return new Claudia.Message
+        {
             Role = Roles.User,
             Content = contentBlocks
-        }};
-
-        return builtMessage;
+        };
     }
 
+    // ============== ELEVEN LABS FUNCTIONALITY ==============
     private async void ListAvailableVoices()
     {
         var elevenLabsAPIKey = new ElevenLabsClient(new ElevenLabsAuthentication().LoadFromEnvironment());
@@ -352,7 +384,7 @@ public class AI_Manager : MonoBehaviour
     private string TrimFlavorText(string textInput)
     {
         // get rid of text that is in * * like *sad*
-        textInput = System.Text.RegularExpressions.Regex.Replace(textInput, @"\*.*?\*", "");
+        textInput = Regex.Replace(textInput, @"\*.*?\*", "");
         return textInput;
     }
 
@@ -362,6 +394,9 @@ public class AI_Manager : MonoBehaviour
         var elevenLabsAPIKey = new ElevenLabsClient(new ElevenLabsAuthentication().LoadFromEnvironment());
         var text = TrimFlavorText(textInput);
 
+
+        // I couldnt get the voice api to recognize voiceID's so I had to use this REALLY CRAPPY method
+        // [0] is a female voice, [1] is a male voice. ¯\_(O_o)_/¯
         var voice = (await elevenLabsAPIKey.VoicesEndpoint.GetAllVoicesAsync())[1];
 
         //var voice = await elevenLabsAPIKey.VoicesEndpoint.GetVoiceAsync("86ZLAUcyPNBrbdJKn3u6");

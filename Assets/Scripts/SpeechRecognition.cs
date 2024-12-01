@@ -7,11 +7,13 @@ using System.IO;
 using HuggingFace.API;
 using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
+using System;
 
 public class SpeechRecognition : MonoBehaviour
 {
     [SerializeField] private bool _recording;
     [SerializeField] private TMP_Text _recognizedText;
+    public TMP_InputField targetInputField;
     //[SerializeField] private TextMeshProUGUI _recognizedText;
     public AI_Manager AI_Manager;
 
@@ -24,6 +26,74 @@ public class SpeechRecognition : MonoBehaviour
     {
         //StartRecording();
         
+    }
+
+    // recording Name Input on Main Menu
+    public void RecordNameForDuration(float duration)
+    {
+        if (Microphone.IsRecording(null))
+        {
+            Debug.LogWarning("Already recording!");
+            return;
+        }
+
+        Debug.Log($"Recording for {duration} seconds...");
+        _audioClip = Microphone.Start(null, true, Mathf.CeilToInt(duration), 44100);
+
+        StartCoroutine(StopRecordingAfterDuration(duration));
+    }
+
+    private IEnumerator StopRecordingAfterDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        if (!Microphone.IsRecording(null))
+        {
+            Debug.LogWarning("Not recording!");
+            yield break;
+        }
+
+        int postion = Microphone.GetPosition(null);
+        Microphone.End(null);
+
+        if (_audioClip == null || postion <= 0)
+        {
+            Debug.LogError("No Audio Recorded");
+            yield break;
+        }
+
+        float[] samples = new float[postion * _audioClip.channels];
+        _audioClip.GetData(samples, 0);
+        _audioData = EncodeAsWAV(samples, _audioClip.frequency, _audioClip.channels);
+
+        ProcessNameInput();
+    }
+
+    private void ProcessNameInput()
+    {
+        HuggingFaceAPI.AutomaticSpeechRecognition(_audioData, (response) =>
+        {
+            Debug.Log($"Recognized Name before REGEX: {response}");
+            response = CleanName(response);
+            Debug.Log($"Recognized Name after REGEX: {response}");
+            targetInputField.text = response;
+        }, error =>
+        {
+            Debug.LogError(error);
+        });
+    }
+
+    private string CleanName(string response)
+    {
+        if (string.IsNullOrEmpty(response))
+        {
+            Debug.LogWarning("Name is empty!");
+            return response;
+        }
+
+        response = System.Text.RegularExpressions.Regex.Replace(response, @"\.+$", "");
+
+        return response;
     }
 
     public void StartRecording()
@@ -62,6 +132,10 @@ public class SpeechRecognition : MonoBehaviour
         HuggingFaceAPI.AutomaticSpeechRecognition(_audioData, (response) =>
         {
             _recognizedText.text = response;
+            // TODO: REGEX to check for period at end of name input
+
+
+
             AI_Manager.GenerateAiResponse(response);
         }, error =>
         {

@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities.Extensions;
 
 public class GameStartMenu : MonoBehaviour
 {
@@ -17,7 +19,7 @@ public class GameStartMenu : MonoBehaviour
     public Button startButton;
     public Button optionButton;
     public Button aboutButton;
-    //public Button recordNameButton;
+    public Button recordNameButton;
     public Button enterNameButton;
     public Button quitButton;
     public Button submitButton;
@@ -25,12 +27,15 @@ public class GameStartMenu : MonoBehaviour
     public TMP_InputField nameInputField;
 
     public VRKeyboardController vrKeyboardController;
+    public SpeechRecognition speechRecognition;
+    private const float RECORDING_DURATION = 3.0f;
 
     public List<Button> returnButtons;
 
     // Start is called before the first frame update
     void Start()
     {
+        recordNameButton.onClick.AddListener(RecordName);
         nameInputField.onSelect.AddListener(delegate { EnableVRKeyboard(); });
         EnableMainMenu();
         //Hook events
@@ -49,6 +54,28 @@ public class GameStartMenu : MonoBehaviour
         }
     }
 
+    public void RecordName()
+    {
+        if (speechRecognition != null && nameInputField != null)
+        {
+            speechRecognition.targetInputField = nameInputField;
+            speechRecognition.RecordNameForDuration(RECORDING_DURATION);
+            recordNameButton.GetComponentInChildren<TMP_Text>().text = "Recording...";
+            StartCoroutine(ResetButtonTextAfterDuration(RECORDING_DURATION));
+            //EnableRecordName();
+        }
+        else
+        {
+            Debug.LogError("SpeechRecognition or nameInputField is not assigned!");
+        }
+    }
+
+    private IEnumerator ResetButtonTextAfterDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        recordNameButton.GetComponentInChildren<TMP_Text>().text = "Record Name";
+    }
+
     public void QuitGame()
     {
         // Quit the game in the editor
@@ -62,7 +89,11 @@ public class GameStartMenu : MonoBehaviour
     public void StartGame()
     {
         HideAll();
-        SceneTransitionManager.singleton.GoToSceneAsync(1);
+        // TODO: Initiate the interview
+        // Open door animation
+        // 
+
+        //SceneTransitionManager.singleton.GoToSceneAsync(1);
     }
 
     public void HideAll()
@@ -153,6 +184,7 @@ public class GameStartMenu : MonoBehaviour
             
             Debug.Log("username saved: " + PlayerPrefs.GetString("UserName"));
             // Start the game
+            vrKeyboardController.SetActive(false);
             StartGame();
         }
         else

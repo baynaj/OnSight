@@ -24,15 +24,9 @@ public class AI_EventResponse : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SendEventMessage()
     {
-        
-    }
-
-    public void SendEventMessage(string message)
-    {
-        promptedAI.GenerateAiResponse(message);
+        promptedAI.GenerateAiResponse($"EVENT: {eventMessage}");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,7 +36,7 @@ public class AI_EventResponse : MonoBehaviour
         {
             if (other.CompareTag(tag))
             {
-                SendEventMessage($"EVENT: {eventMessage}");
+                SendEventMessage();
                 if (isOneShot) gameObject.SetActive(false);
                 break;
             }

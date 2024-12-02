@@ -134,11 +134,18 @@ public class AI_Manager : MonoBehaviour
     void Awake()
     {
         //TODO: using these variables to set up interview parameters.
-        userName = PlayerPrefs.GetString("UserName");
+        
         //interviewerName = PlayerPrefs.GetString("InterviewerName");
         //questionAmount = PlayerPrefs.GetInt("QuestionAmount");
 
 
+        
+    }
+
+    private void CreateSystemMessage()
+    {
+
+        userName = PlayerPrefs.GetString("UserName");
         if (systemMessage == "")
         {
             systemMessage =
@@ -183,7 +190,6 @@ public class AI_Manager : MonoBehaviour
         }
     }
 
-
     private void ReadPromptVariables()
     {
         ModelTemperature = _modelTemperature;
@@ -208,6 +214,7 @@ public class AI_Manager : MonoBehaviour
     public void GenerateAiResponse(string inputPrompt)
     {
         ClearResponseBox();
+        CreateSystemMessage(); // update system message in-case any variables have changed.
         GetClaudeResponse(inputPrompt, null, streamResponseWordByWord);
         
     }

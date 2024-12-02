@@ -9,6 +9,8 @@ public class WhiteboardMarker : MonoBehaviour
     [SerializeField] private Transform _markerTip;
     [SerializeField] private int _tipSize;
 
+    private BoxCollider _collider;
+
     private Renderer _renderer;
     private Color[] _colors;
     private float _tipHeight;
@@ -17,18 +19,25 @@ public class WhiteboardMarker : MonoBehaviour
     private Whiteboard _detectedWhiteboard;
     private Vector2 _hitPos;
     private Vector2 _lastHitPos;
-    private Quaternion _lastHitrot;
+    [SerializeField] private PhysicMaterial slipperyPhysMat;
+    [SerializeField] private PhysicMaterial normalPhysMat;
+
+
+    //private Quaternion _lastHitrot;
+    private Rigidbody _rb;
     private bool _hitLastFrame;
 
     public bool isEraser = false;
     public bool lockRotation = true;
 
     [Tooltip("How much drawing is interpolated from 0 to 1.")]
-    [SerializeField] private float _drawSmoothing = 0.025f;
+    [SerializeField] private float _drawSmoothing = 0.05f;
 
     void Start()
     {
         _renderer = _markerTip.GetComponent<Renderer>();
+        _rb = GetComponent<Rigidbody>();
+        _collider = GetComponentInChildren<BoxCollider>();
 
         // In order to draw to the texture, we have to designate an area of pixels to draw to.
         _colors = Enumerable.Repeat(_renderer.material.color, _tipSize * _tipSize).ToArray();
@@ -36,7 +45,7 @@ public class WhiteboardMarker : MonoBehaviour
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Draw();
     }
@@ -55,6 +64,8 @@ public class WhiteboardMarker : MonoBehaviour
                 //Grabs the component on hit only once, so we dont have to keep calling it
                 if (_detectedWhiteboard == null)
                 {
+                    _collider.material = slipperyPhysMat;
+                    _rb.freezeRotation = true;
                     _detectedWhiteboard = _hit.transform.GetComponent<Whiteboard>();
                     //Debug.Log("Found whiteboard!");
 
@@ -81,34 +92,46 @@ public class WhiteboardMarker : MonoBehaviour
 
 
                 //If we hit the whiteboard last frame, draw a line between the last hit position and the current hit position
-                if (_hitLastFrame)
+                try
                 {
-                    _detectedWhiteboard.texture.SetPixels(x, y, _tipSize, _tipSize, _colors);
-
-                    for (float i = 0.01f; i < 1; i += 0.01f)
+                    if (_hitLastFrame)
                     {
-                        int lerpX = (int)Mathf.Lerp(_lastHitPos.x, x, i);
-                        int lerpY = (int)Mathf.Lerp(_lastHitPos.y, y, i);
-                        _detectedWhiteboard.texture.SetPixels(lerpX, lerpY, _tipSize, _tipSize, _colors);
+                        _detectedWhiteboard.texture.SetPixels(x, y, _tipSize, _tipSize, _colors);
+
+                        for (float i = 0.01f; i < 1; i += _drawSmoothing)
+                        {
+                            int lerpX = (int)Mathf.Lerp(_lastHitPos.x, x, i);
+                            int lerpY = (int)Mathf.Lerp(_lastHitPos.y, y, i);
+                            _detectedWhiteboard.texture.SetPixels(lerpX, lerpY, _tipSize, _tipSize, _colors);
+                        }
+
+                        //if(lockRotation) transform.rotation = _lastHitrot;
+
+                        _detectedWhiteboard.texture.Apply();
                     }
-
-                    if(lockRotation)
-                        transform.rotation = _lastHitrot;
-
-                    _detectedWhiteboard.texture.Apply();
+                }
+                catch { 
+                    return; 
                 }
 
                 //Set last frame information
                 _lastHitPos = new Vector2(x, y);
-                _lastHitrot = transform.rotation;
+                //_lastHitrot = transform.rotation;
                 _hitLastFrame = true;
                 return;
             }
         }
 
         //If we didnt find a whiteboard with our raycast, then we are not drawing on a whiteboard. 
-        _detectedWhiteboard = null;
-        _hitLastFrame = false;
+        if(_detectedWhiteboard != null)
+        {
+            _collider.material = normalPhysMat;
+            _rb.freezeRotation = false;
+            _detectedWhiteboard = null;
+            _hitLastFrame = false;
+        }
+        
+        
     }
 
 

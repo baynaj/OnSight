@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3570108069694330231}
   - component: {fileID: 949956128589210593}
-  - component: {fileID: 6490662535328182256}
   - component: {fileID: 2433826640705701388}
+  - component: {fileID: 5264710401625369548}
   m_Layer: 0
   m_Name: WhiteboardEraser
   m_TagString: Untagged
@@ -64,7 +64,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &6490662535328182256
+--- !u!114 &2433826640705701388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260838951640764380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 502b24645130d4047afc362e9ddb796b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eraserTip: {fileID: 7001567749344677812}
+  _tipLength: 80
+  _tipWidth: 160
+  slipperyPhysMat: {fileID: 13400000, guid: 69e9bd7ea9e6e45cfb5e74783123202e, type: 2}
+  normalPhysMat: {fileID: 0}
+  lockRotation: 1
+  _drawSmoothing: 0.025
+--- !u!114 &5264710401625369548
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,13 +187,13 @@ MonoBehaviour:
       m_Calls: []
   m_AttachTransform: {fileID: 5534760830410114597}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 1
+  m_MovementType: 0
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -211,29 +230,11 @@ MonoBehaviour:
   m_ThrowVelocityScale: 1.5
   m_ThrowAngularVelocityScale: 1
   m_ForceGravityOnDetach: 0
-  m_RetainTransformParent: 0
+  m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
---- !u!114 &2433826640705701388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 260838951640764380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 502b24645130d4047afc362e9ddb796b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _eraserTip: {fileID: 7001567749344677812}
-  _tipLength: 5
-  _tipWidth: 10
-  isEraser: 1
-  lockRotation: 1
-  _drawSmoothing: 0.025
 --- !u!1 &1244183834747572961
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +345,7 @@ Transform:
   m_GameObject: {fileID: 3564504176106605748}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071057, y: -0, z: -0, w: 0.7071079}
-  m_LocalPosition: {x: 0, y: 0.0339, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0071, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -455,5 +456,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.9999997, y: 1.2034397, z: 1}
+  m_Center: {x: 0, y: 0.1017201, z: 0}

@@ -10,6 +10,9 @@ public class WhiteboardEraser : MonoBehaviour
     [SerializeField] private int _tipLength;
     [SerializeField] private int _tipWidth;
 
+    [SerializeField] private PhysicMaterial slipperyPhysMat;
+    [SerializeField] private PhysicMaterial normalPhysMat;
+
     private Renderer _renderer;
     private Color[] _colors;
     private float _tipHeight;
@@ -21,23 +24,25 @@ public class WhiteboardEraser : MonoBehaviour
     private Quaternion _lastHitrot;
     private bool _hitLastFrame;
 
-    public bool isEraser = false;
+    private Rigidbody _rb;
+    private BoxCollider _collider; 
     public bool lockRotation = true;
 
     [Tooltip("How much drawing is interpolated from 0 to 1.")]
-    [SerializeField] private float _drawSmoothing = 0.025f;
+    [SerializeField] private float _drawSmoothing = 0.1f;
 
     void Start()
     {
         _renderer = _eraserTip.GetComponent<Renderer>();
-
+        _rb = GetComponent<Rigidbody>();
+        _collider = GetComponentInChildren<BoxCollider>();
         // In order to draw to the texture, we have to designate an area of pixels to draw to.
         _colors = Enumerable.Repeat(_renderer.material.color, _tipLength * _tipWidth).ToArray();
         _tipHeight = _eraserTip.localScale.y;
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Draw();
     }
@@ -56,6 +61,8 @@ public class WhiteboardEraser : MonoBehaviour
                 //Grabs the component on hit only once, so we dont have to keep calling it
                 if (_detectedWhiteboard == null)
                 {
+                    _rb.freezeRotation = true;
+                    _collider.material = slipperyPhysMat;
                     _detectedWhiteboard = _hit.transform.GetComponent<Whiteboard>();
                     Color whiteboardColor = _detectedWhiteboard.GetComponent<Renderer>().material.color;
                     _colors = Enumerable.Repeat(whiteboardColor, _tipLength * _tipWidth).ToArray();
@@ -71,41 +78,50 @@ public class WhiteboardEraser : MonoBehaviour
 
 
                 //To make sure we are trying to draw within the bounds of our whiteboard
-                if (y < 0 || y >= _detectedWhiteboard.texSize.y || x < 0 || x >= _detectedWhiteboard.texSize.x)
-                {
-                    return;
-                }
+                if (y < 0 || y >= _detectedWhiteboard.texSize.y || x < 0 || x >= _detectedWhiteboard.texSize.x) return;
+                
 
 
                 //If we hit the whiteboard last frame, draw a line between the last hit position and the current hit position
-                if (_hitLastFrame)
-                {
-                    _detectedWhiteboard.texture.SetPixels(x, y, _tipLength, _tipWidth, _colors);
-
-                    for (float i = 0.01f; i < 1; i += 0.01f)
+                try{
+                    if (_hitLastFrame)
                     {
-                        int lerpX = (int)Mathf.Lerp(_lastHitPos.x, x, i);
-                        int lerpY = (int)Mathf.Lerp(_lastHitPos.y, y, i);
-                        _detectedWhiteboard.texture.SetPixels(lerpX, lerpY, _tipLength, _tipWidth, _colors);
+
+                        _detectedWhiteboard.texture.SetPixels(x, y, _tipLength, _tipWidth, _colors);
+
+                        for (float i = 0.01f; i < 1; i += _drawSmoothing)
+                        {
+                            int lerpX = (int)Mathf.Lerp(_lastHitPos.x, x, i);
+                            int lerpY = (int)Mathf.Lerp(_lastHitPos.y, y, i);
+                            _detectedWhiteboard.texture.SetPixels(lerpX, lerpY, _tipLength, _tipWidth, _colors);
+                        }
+
+                        //if (lockRotation) transform.rotation = _lastHitrot;
+
+                        _detectedWhiteboard.texture.Apply();
                     }
-
-                    if(lockRotation)
-                        transform.rotation = _lastHitrot;
-
-                    _detectedWhiteboard.texture.Apply();
                 }
+                catch { 
+                    return; 
+                }
+
 
                 //Set last frame information
                 _lastHitPos = new Vector2(x, y);
-                _lastHitrot = transform.rotation;
+                //_lastHitrot = transform.rotation;
                 _hitLastFrame = true;
                 return;
             }
         }
 
         //If we didnt find a whiteboard with our raycast, then we are not drawing on a whiteboard. 
-        _detectedWhiteboard = null;
-        _hitLastFrame = false;
+        if (_detectedWhiteboard != null)
+        {
+            _collider.material = normalPhysMat;
+            _rb.freezeRotation = false;
+            _detectedWhiteboard = null;
+            _hitLastFrame = false;
+        }
     }
 
 

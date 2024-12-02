@@ -22,7 +22,7 @@ public class VRKeyboardController : MonoBehaviour
         //vrKeyboard.transform.position = inputField.transform.position + new Vector3(0, 0.5f, 0);
     }
 
-    public void HideKeyboard()
+    public void HideKeyboardAndGoBack()
     {
         vrKeyboard.SetActive(false);
         
@@ -31,6 +31,16 @@ public class VRKeyboardController : MonoBehaviour
             activeInputField.text = ""; // Clear the input field
             activeInputField = null;
         }
+
+        if (gameStartMenu != null)
+        {
+            gameStartMenu.ReactivateRecordNameButton();
+        }
+    }
+
+    public void HideKeyboard()
+    {
+        vrKeyboard.SetActive(false);
 
         if (gameStartMenu != null)
         {

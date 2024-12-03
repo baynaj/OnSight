@@ -8,14 +8,41 @@ using HuggingFace.API;
 using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
 using System;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 public class SpeechRecognition : MonoBehaviour
 {
-    [SerializeField] private bool _recording;
+
+    [SerializeField] private bool _recording = false;
     [SerializeField] private TMP_Text _recognizedText;
+
+    [Tooltip("The input field where the user's name will be displayed.")]
+    public TMP_InputField nameInputField;
+
+    [Tooltip("The input field where the user's speech will be displayed.")]
     public TMP_InputField targetInputField;
+
+    public TMP_Text recordingNotification;
+    public bool canRecord = false;
+    [Tooltip("If true, the AI will respond directly to the user's speech, else it will be sent to the text box first.")]
+    public bool directReponses = false;
     //[SerializeField] private TextMeshProUGUI _recognizedText;
     public AI_Manager AI_Manager;
+
+    public InputActionProperty m_RightHandRecordAction = new InputActionProperty(new InputAction("Right Hand Record", expectedControlType: "float"));
+    public InputActionProperty RightHandRecordAction
+    {
+        get => m_RightHandRecordAction;
+        set => SetInputActionProperty(ref m_RightHandRecordAction, value);
+    }
+
+    public InputActionProperty m_LeftHandRecordAction = new InputActionProperty(new InputAction("Left Hand Record", expectedControlType: "float"));
+    public InputActionProperty LeftHandRecordAction
+    {
+        get => m_LeftHandRecordAction;
+        set => SetInputActionProperty(ref m_LeftHandRecordAction, value);
+    }
 
     private AudioClip _audioClip;
     private byte[] _audioData;
@@ -25,11 +52,33 @@ public class SpeechRecognition : MonoBehaviour
     void Start()
     {
         //StartRecording();
-        
+
     }
 
-    // recording Name Input on Main Menu
-    public void RecordNameForDuration(float duration)
+    void Update()
+    {
+        if (canRecord) { 
+            float recordPressed = ReadRecordButtons();
+            if (!_recording && recordPressed > 0)
+            {
+                _recording = true;
+                Debug.Log("BUTTON PRESSED!");
+                recordingNotification.text = "-RECORDING!-";
+                StartRecording();
+            }
+
+            if (_recording && !(recordPressed > 0))
+            {
+                _recording = false; 
+                recordingNotification.text = "Hold A to record";
+                Debug.Log("BUTTON RELEASED!");
+                StopRecording();
+            }
+        }
+    }
+
+        // recording Name Input on Main Menu
+        public void RecordNameForDuration(float duration)
     {
         if (Microphone.IsRecording(null))
         {
@@ -102,14 +151,6 @@ public class SpeechRecognition : MonoBehaviour
         _audioClip = Microphone.Start(null, true, 300, 44100);
     }
 
-    public void FixedUpdate()
-    {
-       //if (!_recording)
-       //{
-       //    StopRecording();
-       //}
-    }
-
     public void StopRecording()
     {
         var position = Microphone.GetPosition(null);
@@ -135,11 +176,18 @@ public class SpeechRecognition : MonoBehaviour
             // TODO: REGEX to check for period at end of name input
 
 
+            if (directReponses)
+            {
+                AI_Manager.GenerateAiResponse(response);
+            }
+            else
+            {
+                targetInputField.text = response;
+            }
 
-            AI_Manager.GenerateAiResponse(response);
         }, error =>
         {
-           _recognizedText.text = error;
+            _recognizedText.text = error;
         });
     }
 
@@ -169,10 +217,35 @@ public class SpeechRecognition : MonoBehaviour
         writer.Close();
         return stream.ToArray();
     }
-}
 
-#region GUI CONTROLS
-[CustomEditor(typeof(SpeechRecognition))]
+    //on VR A press, start recording
+    void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
+    {
+        if (Application.isPlaying)
+            property.DisableDirectAction();
+
+        property = value;
+
+        if (Application.isPlaying && isActiveAndEnabled)
+            property.EnableDirectAction();
+    }
+
+    public float ReadRecordButtons()
+    {
+        var leftHandValue = m_LeftHandRecordAction.action?.ReadValue<float>() ?? 0.0f;
+        var rightHandValue = m_RightHandRecordAction.action?.ReadValue<float>() ?? 0.0f;
+
+        return leftHandValue + rightHandValue;
+    }
+
+    public void SetCanRecord(bool value)
+    {
+        canRecord = value;
+    }
+
+}
+    #region GUI CONTROLS
+    [CustomEditor(typeof(SpeechRecognition))]
 public class InspectorButtonsNEW : Editor
 {
     public override void OnInspectorGUI()

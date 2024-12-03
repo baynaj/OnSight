@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class EventTrigger : MonoBehaviour
 {
     public List<string> triggerTags = new();
+    public bool oneShot = false;
     public UnityEvent customEvent = null;
     
 
@@ -23,7 +24,11 @@ public class EventTrigger : MonoBehaviour
                 break;
             }
         }
-            
+
+        if (oneShot)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
 

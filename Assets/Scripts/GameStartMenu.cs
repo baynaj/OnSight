@@ -32,6 +32,8 @@ public class GameStartMenu : MonoBehaviour
 
     public List<Button> returnButtons;
 
+    public Animator doorAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -91,8 +93,14 @@ public class GameStartMenu : MonoBehaviour
         HideAll();
         // TODO: Initiate the interview
         // Open door animation
-        // 
-
+        if (doorAnimator != null)
+        {
+            doorAnimator.SetTrigger("OpenDoor");
+        }
+        else
+        {
+            Debug.LogError("Door Animator is not assigned!");
+        }
         //SceneTransitionManager.singleton.GoToSceneAsync(1);
     }
 

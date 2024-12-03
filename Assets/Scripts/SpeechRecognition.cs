@@ -173,9 +173,6 @@ public class SpeechRecognition : MonoBehaviour
         HuggingFaceAPI.AutomaticSpeechRecognition(_audioData, (response) =>
         {
             _recognizedText.text = response;
-            // TODO: REGEX to check for period at end of name input
-
-
             if (directReponses)
             {
                 AI_Manager.GenerateAiResponse(response);
@@ -185,7 +182,6 @@ public class SpeechRecognition : MonoBehaviour
             {
                 targetInputField.text = response;
             }
-
         }, error =>
         {
             _recognizedText.text = error;

@@ -49,7 +49,12 @@ public class WhiteboardMarker : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if (frameSkip <= 1)
+        {
+            frameSkip++;
+            return;
+        }
+        frameSkip = 0;
         Draw();
     }
 

@@ -19,6 +19,8 @@ public class WhiteboardMarker : MonoBehaviour
     private Whiteboard _detectedWhiteboard;
     private Vector2 _hitPos;
     private Vector2 _lastHitPos;
+    private int frameSkip = 0;
+
     [SerializeField] private PhysicMaterial slipperyPhysMat;
     [SerializeField] private PhysicMaterial normalPhysMat;
 
@@ -47,6 +49,7 @@ public class WhiteboardMarker : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         Draw();
     }
 
@@ -69,11 +72,6 @@ public class WhiteboardMarker : MonoBehaviour
                     _detectedWhiteboard = _hit.transform.GetComponent<Whiteboard>();
                     //Debug.Log("Found whiteboard!");
 
-                    if (isEraser)
-                    {
-                        Color whiteboardColor = _detectedWhiteboard.GetComponent<Renderer>().material.color;
-                        _colors = Enumerable.Repeat(whiteboardColor, _tipSize * _tipSize).ToArray();
-                    }
                     
                 }
 
@@ -90,7 +88,8 @@ public class WhiteboardMarker : MonoBehaviour
                     return;
                 }
 
-
+                //float distToLastPoint = Vector2.Distance(_lastHitPos, new Vector2(x, y));
+                //_drawSmoothing = Mathf.Clamp(1 - distToLastPoint, 0.025f, 1f);
                 //If we hit the whiteboard last frame, draw a line between the last hit position and the current hit position
                 try
                 {
@@ -129,11 +128,8 @@ public class WhiteboardMarker : MonoBehaviour
             _rb.freezeRotation = false;
             _detectedWhiteboard = null;
             _hitLastFrame = false;
-        }
-        
-        
+        } 
     }
-
 
     //Unused ATM
     public void setPenColor(Color color)

@@ -6,7 +6,8 @@ public class Whiteboard : MonoBehaviour
 {
     public Texture2D texture;
     public Color startingColor = Color.white;
-    public Vector2 texSize = new Vector2(2048, 2048);
+    //public Vector2 texSize = new Vector2(2048, 2048);
+    public Vector2 texSize = new Vector2(1024, 1024);
 
     void Start()
     {

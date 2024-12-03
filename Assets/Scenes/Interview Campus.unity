@@ -5598,6 +5598,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5032242503437846520, guid: c4ff1681abbda074295e132c80a51223,
+        type: 3}
+      propertyPath: _drawSmoothing
+      value: 0.03
+      objectReference: {fileID: 0}
     - target: {fileID: 8259411707024591399, guid: c4ff1681abbda074295e132c80a51223,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -9792,6 +9797,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WhiteboardEraser
       objectReference: {fileID: 0}
+    - target: {fileID: 2433826640705701388, guid: 9615e417ad9c8eb428ed0e924cb086e6,
+        type: 3}
+      propertyPath: _drawSmoothing
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3570108069694330231, guid: 9615e417ad9c8eb428ed0e924cb086e6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12593,6 +12603,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 2.527
       objectReference: {fileID: 0}
+    - target: {fileID: 5546175616806281449, guid: d9470993b9bd0a541a884d6f6704a421,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.0339835
+      objectReference: {fileID: 0}
     - target: {fileID: 7499810140834356217, guid: d9470993b9bd0a541a884d6f6704a421,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -14205,7 +14220,7 @@ PrefabInstance:
     - target: {fileID: 5854962470016958130, guid: c4a3f59d6eb9eef409b4633029909243,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.0396384
+      value: 1.0273159
       objectReference: {fileID: 0}
     - target: {fileID: 5854962470016958130, guid: c4a3f59d6eb9eef409b4633029909243,
         type: 3}
@@ -14215,7 +14230,7 @@ PrefabInstance:
     - target: {fileID: 5854962470016958130, guid: c4a3f59d6eb9eef409b4633029909243,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0338
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 5854962470016958130, guid: c4a3f59d6eb9eef409b4633029909243,
         type: 3}
@@ -17762,7 +17777,7 @@ PrefabInstance:
     - target: {fileID: 260838951640764380, guid: c4ff1681abbda074295e132c80a51223,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3570108069694330231, guid: c4ff1681abbda074295e132c80a51223,
         type: 3}
@@ -19432,7 +19447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.672, y: -1.432}
+  m_AnchoredPosition: {x: -0.672, y: -1.554}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1645382974
@@ -19530,7 +19545,7 @@ MonoBehaviour:
   m_fontSizeBase: 9
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 8
+  m_fontSizeMin: 4
   m_fontSizeMax: 18
   m_fontStyle: 1
   m_HorizontalAlignment: 2
@@ -19564,7 +19579,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 1.8974371, y: -4.2044153, z: -7.056549, w: 1.4862957}
+  m_margin: {x: -5.2290945, y: -4.2044153, z: -7.056549, w: -4.4874167}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -22544,7 +22559,7 @@ PrefabInstance:
     - target: {fileID: 260838951640764380, guid: c4ff1681abbda074295e132c80a51223,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3570108069694330231, guid: c4ff1681abbda074295e132c80a51223,
         type: 3}
@@ -23978,7 +23993,7 @@ PrefabInstance:
     - target: {fileID: 1178791450436251564, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}
       propertyPath: m_RequestedTrackingOriginMode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}

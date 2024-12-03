@@ -82,7 +82,7 @@ MonoBehaviour:
   slipperyPhysMat: {fileID: 13400000, guid: 69e9bd7ea9e6e45cfb5e74783123202e, type: 2}
   normalPhysMat: {fileID: 0}
   lockRotation: 1
-  _drawSmoothing: 0.025
+  _drawSmoothing: 0.075
 --- !u!114 &5264710401625369548
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -50,12 +50,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _markerTip: {fileID: 7001567749344677812}
-  _tipSize: 25
+  _tipSize: 13
   slipperyPhysMat: {fileID: 13400000, guid: 69e9bd7ea9e6e45cfb5e74783123202e, type: 2}
   normalPhysMat: {fileID: 0}
   isEraser: 0
   lockRotation: 1
-  _drawSmoothing: 0.01
+  _drawSmoothing: 0.033
 --- !u!54 &949956128589210593
 Rigidbody:
   m_ObjectHideFlags: 0

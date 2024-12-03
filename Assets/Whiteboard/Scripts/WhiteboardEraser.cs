@@ -23,6 +23,7 @@ public class WhiteboardEraser : MonoBehaviour
     private Vector2 _lastHitPos;
     private Quaternion _lastHitrot;
     private bool _hitLastFrame;
+    private int frameSkip = 0;
 
     private Rigidbody _rb;
     private BoxCollider _collider; 
@@ -39,11 +40,18 @@ public class WhiteboardEraser : MonoBehaviour
         // In order to draw to the texture, we have to designate an area of pixels to draw to.
         _colors = Enumerable.Repeat(_renderer.material.color, _tipLength * _tipWidth).ToArray();
         _tipHeight = _eraserTip.localScale.y;
+        
 
     }
 
     private void FixedUpdate()
     {
+        if (frameSkip <= 1)
+        {
+            frameSkip++;
+            return;
+        }
+        frameSkip = 0;
         Draw();
     }
 
@@ -61,13 +69,12 @@ public class WhiteboardEraser : MonoBehaviour
                 //Grabs the component on hit only once, so we dont have to keep calling it
                 if (_detectedWhiteboard == null)
                 {
+                    Debug.LogWarning($"Found whiteboard)");
                     _rb.freezeRotation = true;
                     _collider.material = slipperyPhysMat;
                     _detectedWhiteboard = _hit.transform.GetComponent<Whiteboard>();
                     Color whiteboardColor = _detectedWhiteboard.GetComponent<Renderer>().material.color;
-                    _colors = Enumerable.Repeat(whiteboardColor, _tipLength * _tipWidth).ToArray();
-
-                    
+                    _colors = Enumerable.Repeat(whiteboardColor, _tipLength * _tipWidth).ToArray();                  
                 }
 
                 //Get the position on the white board based on where our marker is.
@@ -79,16 +86,15 @@ public class WhiteboardEraser : MonoBehaviour
 
                 //To make sure we are trying to draw within the bounds of our whiteboard
                 if (y < 0 || y >= _detectedWhiteboard.texSize.y || x < 0 || x >= _detectedWhiteboard.texSize.x) return;
-                
 
 
                 //If we hit the whiteboard last frame, draw a line between the last hit position and the current hit position
-                try{
-                    if (_hitLastFrame)
+                try
+                {
+                    if (_hitLastFrame && _detectedWhiteboard != null)
                     {
 
                         _detectedWhiteboard.texture.SetPixels(x, y, _tipLength, _tipWidth, _colors);
-
                         for (float i = 0.01f; i < 1; i += _drawSmoothing)
                         {
                             int lerpX = (int)Mathf.Lerp(_lastHitPos.x, x, i);

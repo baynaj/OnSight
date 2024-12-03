@@ -17,9 +17,21 @@ public class VRKeyboardController : MonoBehaviour
 
     public void ShowKeyboard(TMP_InputField inputField)
     {
-        activeInputField = inputField;
-        vrKeyboard.SetActive(true);
-        //vrKeyboard.transform.position = inputField.transform.position + new Vector3(0, 0.5f, 0);
+        if (vrKeyboard != null)
+        {
+            Debug.Log("Activating VRKeyboard...");
+            activeInputField = inputField;
+            vrKeyboard.SetActive(true);
+            //vrKeyboard.transform.position = inputField.transform.position + new Vector3(0, 0.5f, 0);
+
+            Debug.Log($"VRKeyboard active status: {vrKeyboard.activeSelf}");
+            Debug.Log($"VRKeyboard position: {vrKeyboard.transform.position}");
+            Debug.Log($"Camera position: {Camera.main.transform.position}");
+        }
+        else
+        {
+            Debug.LogError("VRKeyboardController is not assigned!");
+        }
     }
 
     public void HideKeyboardAndGoBack()

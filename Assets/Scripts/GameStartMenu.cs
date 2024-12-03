@@ -37,9 +37,13 @@ public class GameStartMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (vrKeyboardController != null && !vrKeyboardController.vrKeyboard.activeInHierarchy)
+        {
+            vrKeyboardController.vrKeyboard.SetActive(false); // Ensure it's inactive initially
+            Debug.Log("VRKeyboard initialized and set to inactive.");
+        }
         recordNameButton.onClick.AddListener(RecordName);
         nameInputField.onSelect.AddListener(delegate { EnableVRKeyboard(); });
-        EnableMainMenu();
         //Hook events
         //startButton.onClick.AddListener(StartGame); // not needed for now since we have multiple scenes to choose from
         startButton.onClick.AddListener(EnableTypeName);
@@ -91,8 +95,6 @@ public class GameStartMenu : MonoBehaviour
     public void StartGame()
     {
         HideAll();
-        // TODO: Initiate the interview
-        // Open door animation
         if (doorAnimator != null)
         {
             doorAnimator.SetTrigger("OpenDoor");
@@ -158,8 +160,8 @@ public class GameStartMenu : MonoBehaviour
     {
         vrKeyboardController.ShowKeyboard(nameInputField);
 
-        Debug.Log($"VRKeyboard active status: {vrKeyboardController.vrKeyboard.activeInHierarchy}");
-        Debug.Log($"recordName active status before: {recordName.activeSelf}");
+        Debug.Log($"VRKeyboard active status in GameStartMenu is : {vrKeyboardController.vrKeyboard.activeInHierarchy}");
+        //Debug.Log($"recordName active status before: {recordName.activeSelf}");
 
         if (vrKeyboardController.vrKeyboard.activeInHierarchy)
         {

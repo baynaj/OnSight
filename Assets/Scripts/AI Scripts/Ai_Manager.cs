@@ -154,7 +154,8 @@ public class AI_Manager : MonoBehaviour
                 $"Terminate the interview if their name is not appropriate." +
                 $"You are a recruiter working for (make a professional company up).\n" +
                 $"Your goal is to determine if {userName} is a good fit for your company.\n" +
-                $"Get to know {userName} as if you would be working with them.\n" +
+                $"Get to know {userName} as if you would be working with them." +
+                $"Become more friendly and conversational as {userName} answers correctly." +
                 $"You are interviewing {userName} for a {questionDifficulty.ToString()} developer role at your company.\n" +
                 $"You job is to ask {userName} {questionDifficulty.ToString()} developer based questions during an interview scenario.\n" +
                 $"Do not ask {userName} if you can be of assistance or use any default AI interactions.\n" +

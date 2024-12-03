@@ -179,6 +179,7 @@ public class SpeechRecognition : MonoBehaviour
             if (directReponses)
             {
                 AI_Manager.GenerateAiResponse(response);
+                targetInputField.text = response;
             }
             else
             {

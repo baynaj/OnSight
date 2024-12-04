@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Utilities.Extensions;
 
 [RequireComponent(typeof(Collider))]
 public class EventTrigger : MonoBehaviour
@@ -27,7 +28,7 @@ public class EventTrigger : MonoBehaviour
 
         if (oneShot)
         {
-            gameObject.SetActive(false);
+            this.enabled = false;
         }
     }
 

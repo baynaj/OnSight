@@ -26,7 +26,7 @@ public class SpeechRecognition : MonoBehaviour
     public TMP_Text recordingNotification;
     public bool canRecord = false;
     [Tooltip("If true, the AI will respond directly to the user's speech, else it will be sent to the text box first.")]
-    public bool directReponses = false;
+    public bool usingInputField = true;
     //[SerializeField] private TextMeshProUGUI _recognizedText;
     public AI_Manager AI_Manager;
 
@@ -70,7 +70,6 @@ public class SpeechRecognition : MonoBehaviour
             if (_recording && !(recordPressed > 0))
             {
                 _recording = false; 
-                recordingNotification.text = "Hold A to record";
                 Debug.Log("BUTTON RELEASED!");
                 StopRecording();
             }
@@ -79,18 +78,18 @@ public class SpeechRecognition : MonoBehaviour
 
         // recording Name Input on Main Menu
         public void RecordNameForDuration(float duration)
-    {
-        if (Microphone.IsRecording(null))
         {
-            Debug.LogWarning("Already recording!");
-            return;
+            if (Microphone.IsRecording(null))
+            {
+                Debug.LogWarning("Already recording!");
+                return;
+            }
+
+            Debug.Log($"Recording for {duration} seconds...");
+            _audioClip = Microphone.Start(null, true, Mathf.CeilToInt(duration), 44100);
+
+            StartCoroutine(StopRecordingAfterDuration(duration));
         }
-
-        Debug.Log($"Recording for {duration} seconds...");
-        _audioClip = Microphone.Start(null, true, Mathf.CeilToInt(duration), 44100);
-
-        StartCoroutine(StopRecordingAfterDuration(duration));
-    }
 
     private IEnumerator StopRecordingAfterDuration(float duration)
     {
@@ -125,7 +124,7 @@ public class SpeechRecognition : MonoBehaviour
             Debug.Log($"Recognized Name before REGEX: {response}");
             response = CleanName(response);
             Debug.Log($"Recognized Name after REGEX: {response}");
-            targetInputField.text = response;
+            nameInputField.text = response;
         }, error =>
         {
             Debug.LogError(error);
@@ -147,7 +146,7 @@ public class SpeechRecognition : MonoBehaviour
 
     public void StartRecording()
     {
-        _recognizedText.text = "Listening...";
+        //_recognizedText.text = "Listening...";
         _audioClip = Microphone.Start(null, true, 300, 44100);
     }
 
@@ -164,28 +163,42 @@ public class SpeechRecognition : MonoBehaviour
         _audioClip.GetData(samples, 0);
         _audioData = EncodeAsWAV(samples, _audioClip.frequency, _audioClip.channels);
         _recording = false;
-        _recognizedText.text = "Stopped Listening...";
+        //_recognizedText.text = "Stopped Listening...";
         SendRecording();
+        canRecord = false;
+        recordingNotification.text = "Please wait...";
     }
 
     void SendRecording()
     {
         HuggingFaceAPI.AutomaticSpeechRecognition(_audioData, (response) =>
         {
-            _recognizedText.text = response;
-            if (directReponses)
+            //_recognizedText.text = response;
+            if (usingInputField)
             {
-                AI_Manager.GenerateAiResponse(response);
                 targetInputField.text = response;
             }
             else
             {
                 targetInputField.text = response;
+                AI_Manager.GenerateAiResponse(response);
+                
             }
+            canRecord = true;
+            _recognizedText.text = "";
+            recordingNotification.text = "Hold A to record";
         }, error =>
         {
             _recognizedText.text = error;
+            canRecord = true;
+            recordingNotification.text = "Hold A to record";
         });
+    }
+
+    public void SetUsingInputField(bool value)
+    {
+        usingInputField = value;
+        gameObject.SetActive(true);
     }
 
     byte[] EncodeAsWAV(float[] samples, int sampleRate, int channels)

@@ -37,7 +37,7 @@ public class AI_EventResponse : MonoBehaviour
             if (other.CompareTag(tag))
             {
                 SendEventMessage();
-                if (isOneShot) gameObject.SetActive(false);
+                if (isOneShot) this.enabled = false;
                 break;
             }
         }

@@ -64,7 +64,7 @@ public class GameStartMenu : MonoBehaviour
     {
         if (speechRecognition != null && nameInputField != null)
         {
-            speechRecognition.targetInputField = nameInputField;
+            //speechRecognition.targetInputField = nameInputField;
             speechRecognition.RecordNameForDuration(RECORDING_DURATION);
             recordNameButton.GetComponentInChildren<TMP_Text>().text = "Recording...";
             StartCoroutine(ResetButtonTextAfterDuration(RECORDING_DURATION));

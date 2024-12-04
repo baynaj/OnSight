@@ -38,7 +38,7 @@ public class InGameMenuLoad : MonoBehaviour
         }
     }
 
-    private void EnableExitGame()
+    public void EnableExitGame()
     {
         // Quit the game in the editor
         #if UNITY_EDITOR

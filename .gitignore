@@ -76,4 +76,6 @@ crashlytics-build.properties
 
 # Generated API Configs
 /[Aa]ssets/[Rr]esources/ElevenLabsConfiguration.*
+/[Aa]ssets/[Rr]esources/HuggingFaceAPIConfig.*
+
 
